@@ -1,13 +1,13 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Menu } from './components/Menu';
-import Productos from './components/Productos';
+import ProductsTable from './components/ProductsTable'
 
 function App() {
   return (
     <div className="App">
       <Menu/>
-      <Productos></Productos>
+      <ProductsTable></ProductsTable>
     </div>
   );
 }

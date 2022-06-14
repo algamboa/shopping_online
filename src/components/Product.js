@@ -1,6 +1,6 @@
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Col, Card, Button } from 'react-bootstrap';
 
-const Product = ({ key, image, title, text }) => {
+const Product = ({ key, image, title, text, price }) => {
     return (
         <Col key={key}>
             <Card style={{ width: '18rem' }} className="mt-5">
@@ -10,11 +10,13 @@ const Product = ({ key, image, title, text }) => {
                     <Card.Text>
                         {text}
                     </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
+                    <Card.Text>
+                        Price: {price}
+                    </Card.Text>
+                    <Button variant="primary">Comprar</Button>
                 </Card.Body>
             </Card>
         </Col>
     );
 }
-
 export default Product;

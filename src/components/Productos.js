@@ -6,12 +6,14 @@ import Pagination from './Pagination';
 
 class Productos extends Component {
     componentDidMount() {
-        this.props.getProducts()
+        this.props.getProducts();
+        localStorage.setItem(0, 'pro')
     }
 
     render() {
         const { products } = this.props.products;
         const currentPosts = products.slice(0, 8);
+        console.log(localStorage.getItem(0));
         return (
             <Container>
                 <Row>
