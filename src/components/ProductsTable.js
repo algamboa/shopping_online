@@ -4,64 +4,71 @@ import getRandomPrice from './../utils/GetRandomPrice'
 import Paginate from './Paginate';
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import Product from './Product';
+import { getProducts } from '../actions/productsAction';
+import { useDispatch } from 'react-redux';
 
 const ProductsTable = () => {
-  const [data, setData] = useState(null);
-  const [dataFromPaginate, setDataFromPaginate] = useState(null);
+    const dispatch = useDispatch();
+	const [data, setData] = useState(null);
+	const [dataFromPaginate, setDataFromPaginate] = useState(null);
 	const [usersPerPage] = useState(8);
-  useEffect(() => {
-    fetch('https://www.amiiboapi.com/api/amiibo/')
-      .then((data => data.json()))
-        .then((products => {
-            const data = products.amiibo.map(
-                product => {
-                    product.price = getRandomPrice()
-                    return product
-                }
-            )
-            setData(data)
-        }))
-        .catch(e => console.warn(e));
-  }, []);
-    const updateDataFromPaginate = data => setDataFromPaginate(data);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isError, setIsError] = useState(false);
+	useEffect(() => {
+		/*try {
+			setIsLoading(true);
+			fetch('https://www.amiiboapi.com/api/amiibo/')
+				.then((data => data.json()))
+				.then((products => {
+					const data = products.amiibo.map(
+						product => {
+							product.price = getRandomPrice()
+							return product
+						}
+					)
+					setData(data)
+				}))
+				.catch(e => console.warn(e));
+			setIsLoading(false);
+		} catch (error) {
 
-    
-    
-    const renderUserList = () =>
-    dataFromPaginate
-      ? dataFromPaginate.map((product, i) => (
-          
-            <Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price} tail={product.tail}></Product>
-        ))
-      : data.map((product, i) => {
-          if (i < usersPerPage) {
-			  return (
-				  
-					   <Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price} tail={product.tail}></Product>
+		}*/
+        console.log(dispatch(getProducts()))
 
-                
-            );
-          } else {
-            return null;
-          }
-        });
+	}, []);
+    console.log(isLoading);
+	const updateDataFromPaginate = data => setDataFromPaginate(data);
+	const renderUserList = () =>
+		dataFromPaginate
+			? dataFromPaginate.map((product, i) => (
+                <Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price} tail={product.tail}></Product>
+			))
+			: data.map((product, i) => {
+				if (i < usersPerPage) {
+					return (
+						<Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price} tail={product.tail}></Product>
+					);
+				} else {
+					return null;
+				}
+			});
 
-  return (
-      <div>
-          <Container>
-                <Row className="pb-5">
-      {data ? (
-        <Paginate
-          data={data}
-          setData={updateDataFromPaginate}
-          itemsPerPage={usersPerPage}
-        />
-      ) : null}
-                  {data ? renderUserList() : null}
-              </Row>
-              </Container>
-    </div>
-  );
+	return (
+		<div>
+			<Container>
+				<Row className="pb-5">
+					{data ? (
+						<Paginate
+							data={data}
+							setData={updateDataFromPaginate}
+							itemsPerPage={usersPerPage}
+						/>
+					) : null}
+					{data && !isLoading ? renderUserList() : <div>LOADING...</div>}
+				</Row>
+			</Container>
+		</div>
+	);
 };
 
 export default ProductsTable;
