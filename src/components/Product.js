@@ -1,6 +1,7 @@
 import { Col, Card, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-const Product = ({ key, image, title, text, price }) => {
+const Product = ({ key, image, title, text, price, tail }) => {
     return (
         <Col key={key}>
             <Card style={{ width: '18rem' }} className="mt-5">
@@ -13,7 +14,8 @@ const Product = ({ key, image, title, text, price }) => {
                     <Card.Text>
                         Price: {price}
                     </Card.Text>
-                    <Button variant="primary">Comprar</Button>
+                    <Button variant="primary" className='me-5'>Comprar</Button>
+                    <Link to={`/detailsProduct/${tail}`}><Button variant="secondary">Ver</Button></Link>
                 </Card.Body>
             </Card>
         </Col>

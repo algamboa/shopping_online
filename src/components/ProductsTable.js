@@ -31,13 +31,13 @@ const ProductsTable = () => {
     dataFromPaginate
       ? dataFromPaginate.map((product, i) => (
           
-            <Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price}></Product>
+            <Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price} tail={product.tail}></Product>
         ))
       : data.map((product, i) => {
           if (i < usersPerPage) {
 			  return (
 				  
-					   <Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price}></Product>
+					   <Product key={i} image={product.image} title={product.character} text={product.amiiboSeries} price={product.price} tail={product.tail}></Product>
 
                 
             );
