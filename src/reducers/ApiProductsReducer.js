@@ -4,6 +4,7 @@ const initialState = {
   loading: false,
   data: '',
   error: '',
+  detailProduct: null
 };
 
 const ApiProductsReducer = (state = initialState, action) => {
@@ -25,6 +26,11 @@ const ApiProductsReducer = (state = initialState, action) => {
         error: action.payload,
         loading: false,
       };
+    case ACTIONS_TYPES.SELECTION_PRODUCT:
+        return {
+            ...state,
+            detailProduct: action.payload
+        }
 
     default:
       return state;

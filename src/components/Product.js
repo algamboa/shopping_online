@@ -1,9 +1,14 @@
+import { useState } from 'react';
 import { Col, Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import ACTIONS_TYPES from '../actions/ActionsTypes';
+import { history, Link, useNavigate } from "react-router-dom";
+import { fetchDetail } from '../actions/ApiProductsAction';
 
-const Product = ({ key, image, title, text, price, tail }) => {
+const Product = ({ image, title, text, tail }) => {
+    const information = JSON.parse(localStorage.getItem(tail));
     return (
-        <Col key={key}>
+        <Col key={tail}>
             <Card style={{ width: '18rem' }} className="mt-5">
                 <Card.Img variant="top" src={image} alt="title" width="300px" height="380px" />
                 <Card.Body>
@@ -12,10 +17,9 @@ const Product = ({ key, image, title, text, price, tail }) => {
                         {text}
                     </Card.Text>
                     <Card.Text>
-                        Price: {price}
+                        Price: ${information.price}
                     </Card.Text>
-                    <Button variant="primary" className='me-5'>Comprar</Button>
-                    <Link to={`/detailsProduct/${tail}`}><Button variant="secondary">Ver</Button></Link>
+                    <Link to={`/detailsProduct/${tail}`}><Button variant="primary">Comprar</Button></Link>
                 </Card.Body>
             </Card>
         </Col>

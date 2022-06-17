@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useState } from 'react';
 import getRandomPrice from '../utils/GetRandomPrice';
 import { fetchData, fetchSuccess, fetchError } from './ApiProductsAction';
 
@@ -9,7 +10,7 @@ const ApiProductsAction = (url) => (dispatch) => {
 			.get(url)
 			.then((response) => {
 				const products = response.data.amiibo.map(
-					data => {
+					(data, i) => {
 						data.price = getRandomPrice();
 						return data
 					}
