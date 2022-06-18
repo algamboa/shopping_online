@@ -23,6 +23,7 @@ export class Menu extends Component
                         <Nav className="me-auto">
                             <NavLink to="">Home</NavLink>
                             <NavLink to="/products">Productos</NavLink>
+                            <NavLink to="/checkout">Checkout</NavLink>
                             {/*<Nav.Link href="#link">Link</Nav.Link>
                             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

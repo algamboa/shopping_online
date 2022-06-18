@@ -7,15 +7,32 @@ import axios from 'axios';
 
 const DetailsProduct = () => {
 	const Checkout = () => {
-		let cart = {};
-		cart[shoppingCart.tail] = {shoppingCart}
-		localStorage.setItem("cart", JSON.stringify(cart));
-		/*let a = shoppingCart.tail;
-		cart = ["cart",shoppingCart];
-		
-		const basura = JSON.parse(localStorage.getItem("cart"));*/
-		console.log(shoppingCart);
-		console.log(JSON.parse(localStorage.getItem("cart")));
+		var arr = JSON.parse(localStorage.getItem("cart"));
+		if(arr != null)
+		{
+			var sw = false;
+			arr.map((data, i) => {
+				if(data.tail == tail)
+				{
+					sw = true;
+					arr[i] = shoppingCart;
+					localStorage.setItem("cart", JSON.stringify(arr));
+				}
+			});
+			if(sw === false)
+			{
+				if(Object.keys(shoppingCart).length != 0)
+				{
+					arr.push(shoppingCart);
+					localStorage.setItem("cart", JSON.stringify(arr));
+				}
+				
+			}
+		}
+		else
+		{
+			localStorage.setItem("cart", JSON.stringify([shoppingCart]));
+		}
 	}
 	const AddProduct = (item) => {
 		const total = parseInt(cant) + 1;
@@ -27,10 +44,10 @@ const DetailsProduct = () => {
 			amiiboSeries: item.amiiboSeries,
 			gameSeries: item.gameSeries,
 			quantity: total,
+			image: item.image,
 			totalPrice: parseInt(information.price) * parseInt(total)
 		};
 		setShoppingCart(productAmiibo);
-		console.log(shoppingCart);
 
 	}
 	const DeleteProduct = (item) => {
@@ -47,7 +64,6 @@ const DetailsProduct = () => {
 				totalPrice: parseInt(information.price) * parseInt(total)
 			};
 			setShoppingCart(productAmiibo);
-			console.log(shoppingCart);
 		}
 		else
 		{
