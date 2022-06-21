@@ -13,7 +13,7 @@ const EndShopping = () => {
 			<Container>
 				<Row>
 					<Col lg={12} className="mt-5 mp-5 text-center">
-						<div><h1>Your purchase has been Complete</h1></div>
+						<div><h1>Your purchase has been Completed</h1></div>
 						<img alt="Purchase End" src={imagenBye} width="500px" height="500px"/>
 					</Col>
 				</Row>
