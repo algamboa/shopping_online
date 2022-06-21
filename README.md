@@ -1,13 +1,14 @@
 # Getting Started with Create React App
 
 Este proyecto ha sido creado utilizando [Create React App](https://github.com/facebook/create-react-app).
+
 Para comenzar el proyecto, debes seguir los siguientes pasos:
 
-1.-) Clonar este repositorio
-2.-) Ejecutar npm install
-3.-) Ejecutar npm start
+### 1-) Clonar este repositorio
+### 2-) Ejecutar npm install
+### 3-) Ejecutar npm start
 
-## Available Scripts
+### Available Scripts
 
 En este proyecto podrás realizar los siguientes script
 
