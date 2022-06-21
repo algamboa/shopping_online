@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ApiProductsAction from '../actions/ApiProductsActionCreator';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Paginate from './Paginate';
 import Product from './Product';
+import Loading from './../components/Loading';
 
 const Products = () => {
     const dispatch = useDispatch();
@@ -17,11 +18,13 @@ const Products = () => {
     }, [dispatch]);
 	if(products.length > 0)
 	{
-		products.map(data => {
+		products.forEach(data => {
 			if(localStorage.getItem(data.tail) === null)
 			{
 				localStorage.setItem(`${data.tail}`, JSON.stringify({tail: data.tail, price: data.price}));
 			}
+
+			return;
 		})
 	}
 
@@ -52,7 +55,7 @@ const Products = () => {
 							itemsPerPage={usersPerPage}
 						/>
 					) : null}
-					{products && !loading ? renderUserList() : <div>LOADING...</div>}
+					{products && !loading ? renderUserList() : <Col lg={12}><Loading /></Col>}
 				</Row>
 			</Container>
 		</div>

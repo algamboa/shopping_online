@@ -1,84 +1,79 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { useParams } from "react-router";
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import DetailProductActionAddCreator from './../actions/DetailProductActionAddCreator';
+import Loading from './Loading';
 
 
 const DetailsProduct = () => {
-	const Checkout = () => {
+	const dispatch = useDispatch();
+	const [cant, setCant] = useState(1);
+	const { tail } = useParams();
+	const [amiibo, setAmiibo] = useState(null);
+	const [errorApi, setErrorApi] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const handlerChange = (cant) => {
+		setCant(cant)
+	}
+	const SetLocalStoraProducts = (product) => {
 		var arr = JSON.parse(localStorage.getItem("cart"));
-		if(arr != null)
-		{
+		if (arr !== null) {
 			var sw = false;
-			arr.map((data, i) => {
-				if(data.tail == tail)
-				{
+			arr.forEach((data, i) => {
+				if (data.tail === tail) {
 					sw = true;
-					arr[i] = shoppingCart;
+					arr[i] = product;
 					localStorage.setItem("cart", JSON.stringify(arr));
 				}
 			});
-			if(sw === false)
-			{
-				if(Object.keys(shoppingCart).length != 0)
-				{
-					arr.push(shoppingCart);
+			if (sw === false) {
+				if (Object.keys(product).length !== 0) {
+					arr.push(product);
 					localStorage.setItem("cart", JSON.stringify(arr));
 				}
-				
+
 			}
 		}
-		else
-		{
-			localStorage.setItem("cart", JSON.stringify([shoppingCart]));
+		else {
+			localStorage.setItem("cart", JSON.stringify([product]));
 		}
 	}
-	const AddProduct = (item) => {
-		const total = parseInt(cant) + 1;
-		setCant(total);
+	const AddToCart = (item) => {
 		const information = JSON.parse(localStorage.getItem(item.tail));
 		const productAmiibo = {
 			tail: item.tail,
 			name: item.name,
 			amiiboSeries: item.amiiboSeries,
 			gameSeries: item.gameSeries,
-			quantity: total,
+			quantity: cant,
 			image: item.image,
-			totalPrice: parseInt(information.price) * parseInt(total)
+			totalPrice: parseInt(information.price) * parseInt(cant)
 		};
-		setShoppingCart(productAmiibo);
-
+		SetLocalStoraProducts(productAmiibo);
+		dispatch(DetailProductActionAddCreator(productAmiibo));
 	}
-	const DeleteProduct = (item) => {
-		const total = parseInt(cant - 1);
-		if (total !== 0) {
-			setCant(total);
-			const information = JSON.parse(localStorage.getItem(item.tail));
-			const productAmiibo = {
-				tail: item.tail,
-				name: item.name,
-				amiiboSeries: item.amiiboSeries,
-				gameSeries: item.gameSeries,
-				quantity: total,
-				totalPrice: parseInt(information.price) * parseInt(total)
-			};
-			setShoppingCart(productAmiibo);
+
+	const UpdateQuantity = (type) => {
+		if(type === "up")
+		{
+			setCant(parseInt(cant) + 1)
 		}
 		else
 		{
-			setShoppingCart({});
+			if(cant > 1)
+			{
+				console.log(cant)
+				setCant(parseInt(cant) - 1)
+			}
+			
 		}
 	}
-	const [cant, setCant] = useState(1);
-	const [shoppingCart, setShoppingCart] = useState({});
-	const { tail } = useParams();
-	const [amiibo, setAmiibo] = useState(null);
-	const [errorApi, setErrorApi] = useState(null);
-	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
-		const fetchData = async () => {
+		const getData = async () => {
 			setIsLoading(true);
 			try {
 				const result = await axios(
@@ -90,11 +85,22 @@ const DetailsProduct = () => {
 			}
 			finally {
 				setIsLoading(false);
+				let cart = JSON.parse(localStorage.getItem("cart"));
+				if(cart !== null){
+					if (Object.keys(cart).length !== 0) {
+						cart.forEach((data, i) => {
+							if (data.tail === tail) {
+								setCant(parseInt(data.quantity));
+							}
+						});
+					}
+				}
 			}
 		};
-		fetchData();
+		getData();
 	}, [tail]);
 	const information = JSON.parse(localStorage.getItem(tail));
+
 	if (errorApi) return <div>{errorApi.message}</div>
 	return (
 		<>
@@ -104,7 +110,7 @@ const DetailsProduct = () => {
 				</Row>
 				<Row>
 					<Col lg={4} className="justify-content-center">
-						<div><img src={amiibo.image} /></div>
+						<div><img alt={"Imagen del producto " + tail} src={amiibo.image} style={{width: "70%"}} /></div>
 					</Col>
 					<Col lg={6}>
 						<Row>
@@ -114,7 +120,7 @@ const DetailsProduct = () => {
 						</Row>
 						<Row>
 							<Col lg={2}>
-								<p><b>Nombre: </b></p>
+								<p><b>Name: </b></p>
 							</Col>
 							<Col lg={10}>
 								<p style={{ textAlign: "left" }}>{amiibo.name}</p>
@@ -147,22 +153,22 @@ const DetailsProduct = () => {
 						<Row>
 							<Col lg={12}>
 								<div style={{ textAlign: "left" }}>
-									<h6><b>Cantidad</b></h6>
+									<h6><b>Quantity</b></h6>
 									<div>
 										<Row>
 											<Col lg={1}>
 												<div className='text-center me-0'>
-													<Button variant='danger' onClick={() => DeleteProduct(amiibo)}>-</Button>
+													<Button variant='danger' onClick={() => UpdateQuantity("down")}>-</Button>
 												</div>
 											</Col>
 											<Col lg={2}>
 												<div className='text-center'>
-													<Form.Control style={{ textAlign: 'center' }} type="text" placeholder="Cantidad" defaultValue={cant} />
+													<Form.Control style={{ textAlign: 'center' }} type="text" placeholder="Cantidad" value={cant} onChange={handlerChange} />
 												</div>
 											</Col>
 											<Col lg={1}>
 												<div className='text-center me-0'>
-													<Button variant='primary' onClick={() => AddProduct(amiibo)}>+</Button>
+													<Button variant='primary' onClick={() => UpdateQuantity("up")}>+</Button>
 												</div>
 											</Col>
 											<Col lg={8}></Col>
@@ -172,14 +178,14 @@ const DetailsProduct = () => {
 							</Col>
 						</Row>
 						<Row>
-							<Col lg={4}><div className='text-center'><p><Button className='mt-3' onClick={() => Checkout()}>Ir al Checkout</Button></p></div></Col>
+							<Col lg={4}><div className='text-center'><p><Button className='mt-3' onClick={() => AddToCart(amiibo)}>Add to Cart</Button></p></div></Col>
 						</Row>
 
 
 					</Col>
 					<Col lg={2}><div></div></Col>
 				</Row>
-			</Container>) : (<div>Loading ...</div>)}
+			</Container>) : (<div><Loading /></div>)}
 
 		</>
 	);
